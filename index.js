@@ -209,27 +209,47 @@ const ballotAbi = [
     stateMutability: "view",
     type: "function",
   },
+  {
+    inputs: [],
+    name: "resetVoters",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
 ];
 
 var Ballot;
 var userAccount;
+var userAccountBalance;
 var chairPerson;
 //   var name = document.querySelector("#name1");
 var proposal_name = document.querySelector("#proposal_name");
+var alertPlaceholder = document.getElementById("txStatus");
 
 function startApp() {
   //ballot contratc address
-  var ballotAddress = "0xb3ecEf0C990f5636ee45c8E0CdB5567C770677f3";
+  var ballotAddress = "0x210DD459A9A257e99173074c74B1fCCE40925BDE";
   console.log(userAccount);
   Ballot = new web3.eth.Contract(ballotAbi, ballotAddress);
+
+  //enter value into your profile
+  document.getElementById(
+    "adminAddress"
+  ).innerHTML = `<i class="bi bi-person-fill me-1"></i>  ${userAccount}`;
+  document.getElementById(
+    "adminBalance"
+  ).innerHTML = `<i class="bi bi-currency-dollar me-1"></i>
+    ${userAccountBalance} Ether `;
 
   //  e = sessionStorage.getItem("endVote");
   if (window.location.href == "http://127.0.0.1:5500/Voter.html") {
     if (JSON.parse(sessionStorage.getItem("pause"))) {
       $(".votingSection").hide();
-      $(".resultSection").append(`<p>Voting paused</p>`);
+      $(".resultSection").show();
+      $(".resultSection").html(`<p>Voting paused</p>`);
     } else if (JSON.parse(sessionStorage.getItem("endVote"))) {
       $(".votingSection").hide();
+      $(".resultSection").show();
       winner();
     }
   }
@@ -255,7 +275,6 @@ function displayProposalsName() {
 }
 
 function getProposalsName() {
-  console.log("in");
   return Ballot.methods.viewProposalsName().call();
 }
 
@@ -266,9 +285,27 @@ function giveRight() {
       from: userAccount,
     })
     .on("receipt", function (receipt) {
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = [
+        `<div class="alert alert-success alert-dismissible" role="alert">`,
+        `   <div>You are now eligible for voting</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        "</div>",
+      ].join("");
+
+      alertPlaceholder.append(wrapper);
       console.log("success");
     })
     .on("error", function (error) {
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = [
+        `<div class="alert alert-danger alert-dismissible" role="alert">`,
+        `   <div>Sorry something wrong happen</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        "</div>",
+      ].join("");
+
+      alertPlaceholder.append(wrapper);
       console.log(error);
     });
 }
@@ -280,9 +317,60 @@ function vote(index) {
       from: userAccount,
     })
     .on("receipt", function (receipt) {
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = [
+        `<div class="alert alert-success alert-dismissible" role="alert">`,
+        `   <div>Congratulations!! you have successfully voted.</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        "</div>",
+      ].join("");
+
+      alertPlaceholder.append(wrapper);
       console.log("success");
     })
     .on("error", function (error) {
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = [
+        `<div class="alert alert-danger alert-dismissible" role="alert">`,
+        `   <div>Sorry!! Something wrong happen</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        "</div>",
+      ].join("");
+
+      alertPlaceholder.append(wrapper);
+      console.log(error);
+    });
+}
+
+function delegateVote(address) {
+  Ballot.methods
+    .delegate(address)
+    .send({
+      from: userAccount,
+    })
+    .on("receipt", function (receipt) {
+      $("#delegateId").val("");
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = [
+        `<div class="alert alert-success alert-dismissible" role="alert">`,
+        `   <div>Congratulations!! you have successfully delegate your right to ${address}.</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        "</div>",
+      ].join("");
+
+      alertPlaceholder.append(wrapper);
+      console.log("success");
+    })
+    .on("error", function (error) {
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = [
+        `<div class="alert alert-danger alert-dismissible" role="alert">`,
+        `   <div>Sorry!! Something wrong happen</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        "</div>",
+      ].join("");
+
+      alertPlaceholder.append(wrapper);
       console.log(error);
     });
 }
@@ -292,7 +380,7 @@ function winner() {
     .winnerName()
     .call()
     .then(function (value) {
-      $(".resultSection").append(
+      $(".content").append(
         `<p>Winner name :- ${value.name}</p><p>Total votes :- ${value.voteCount}</p>`
       );
     });
@@ -303,18 +391,45 @@ function summaryVotes() {
     .summaryOfVotes()
     .call()
     .then(function (value) {
+      var temp = [".votes1", ".votes2", ".votes3", ".votes4"];
+      var i = 0;
       value.forEach(function (val) {
-        $(".summary").append(`<p>${val.name} -> ${val.voteCount}</p>`);
+        $(temp[i]).html(`<p>${val.voteCount}</p>`);
+        i++;
       });
+      $("#exampleModal").modal("show");
     });
 }
 
 function resetVote() {
   Ballot.methods
-    .voters()
-    .call()
-    .then(function (val) {
-      console.log(val);
+    .resetVoters()
+    .send({
+      from: userAccount,
+    })
+    .on("receipt", function (receipt) {
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = [
+        `<div class="alert alert-success alert-dismissible" role="alert">`,
+        `   <div>You successfully reset voting</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        "</div>",
+      ].join("");
+
+      alertPlaceholder.append(wrapper);
+      console.log("success");
+    })
+    .on("error", function (error) {
+      const wrapper = document.createElement("div");
+      wrapper.innerHTML = [
+        `<div class="alert alert-danger alert-dismissible" role="alert">`,
+        `   <div>Sorry! Its unsuccessfull to reset voting</div>`,
+        '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+        "</div>",
+      ].join("");
+
+      alertPlaceholder.append(wrapper);
+      console.log(error);
     });
 }
 
@@ -327,7 +442,10 @@ window.addEventListener("load", async () => {
       const accounts = await ethereum.enable();
       // Acccounts now exposed
       userAccount = accounts[0];
-      startApp();
+      web3.eth.getBalance(userAccount).then(function (val) {
+        userAccountBalance = web3.utils.fromWei(val, "ether");
+        startApp();
+      });
     } catch (error) {
       // User denied account access...
     }
@@ -337,7 +455,10 @@ window.addEventListener("load", async () => {
     window.web3 = new Web3(web3.currentProvider);
     // Acccounts always exposed
     userAccount = web3.eth.accounts[0];
-    startApp();
+    web3.eth.getBalance(userAccount).then(function (val) {
+      userAccountBalance = web3.utils.fromWei(val, "ether");
+      startApp();
+    });
   }
   // Non-dapp browsers...
   else {
@@ -355,26 +476,43 @@ ethereum.on("chainChanged", (chainId) => {
   window.location.reload();
 });
 
-// proposal_name.addEventListener("click", () => {
-//   displayProposalsName();
-// });
-
 $("#giveRight").click(function (params) {
   giveRight();
 });
 
 $("#vote").click(function (params) {
-  vote(parseInt($("#index").val()));
+  var radios = document.getElementsByName("flexRadioDefault");
+  for (var i = 0, length = radios.length; i < length; i++) {
+    if (radios[i].checked) {
+      vote(radios[i].value);
+      break;
+    }
+  }
+});
+
+$("#delegate").click(function (params) {
+  delegateVote($("#delegateId").val());
 });
 
 $("#summary").click(function () {
   summaryVotes();
 });
 
+// admin end vote
 $("#endVote").click(function (val) {
   sessionStorage.setItem("endVote", true);
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = [
+    `<div class="alert alert-success alert-dismissible" role="alert">`,
+    `   <div>Voting is over. You can see winner name soon</div>`,
+    '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+    "</div>",
+  ].join("");
+
+  alertPlaceholder.append(wrapper);
 });
 
+// admin pause button
 $("#pause").click(function (val) {
   var btn = document.getElementById("pause");
 
@@ -382,10 +520,28 @@ $("#pause").click(function (val) {
     btn.value = "continue";
     btn.textContent = "continue";
     sessionStorage.setItem("pause", true);
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = [
+      `<div class="alert alert-success alert-dismissible" role="alert">`,
+      `   <div>You successfully pause the voting</div>`,
+      '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+      "</div>",
+    ].join("");
+
+    alertPlaceholder.append(wrapper);
   } else if (btn.value == "continue") {
     btn.value = "pause";
     btn.textContent = "pause";
     sessionStorage.setItem("pause", false);
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = [
+      `<div class="alert alert-success alert-dismissible" role="alert">`,
+      `   <div>Voting is continue</div>`,
+      '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+      "</div>",
+    ].join("");
+
+    alertPlaceholder.append(wrapper);
   }
 });
 
@@ -396,10 +552,10 @@ $("#reset").click(function (val) {
 //for login home page
 $("#submit").click(function () {
   let value = $("#loginId").val();
-  if (value == "Admin") {
+  let temp = "0xE390F21E31ccd2160AE461fFA24788FfD98901b9";
+  if (value.toLowerCase() == temp.toLowerCase()) {
     window.location.href = "./Admin.html";
-  }
-  if (value.toLowerCase() == userAccount.toLowerCase()) {
+  } else if (value.toLowerCase() == userAccount.toLowerCase()) {
     window.location.href = "./Voter.html";
   }
 });

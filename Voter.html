@@ -14,22 +14,273 @@
       type="text/javascript"
       src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"
     ></script>
-    <title>Voter</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <title>EVoting</title>
   </head>
   <body>
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-lg bg-black">
+      <div class="container-fluid">
+        <a class="navbar-brand text-light">EVoting</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item px-1">
+              <a class="nav-link active text-light" aria-current="page">Home</a>
+            </li>
+            <li class="nav-item px-1">
+              <a class="nav-link text-muted" href="./Candidates.html"
+                >Candidates</a
+              >
+            </li>
+            <li class="nav-item px-1">
+              <a class="nav-link text-muted" href="#">NFT</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle text-muted"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                Your Profile
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" id="adminAddress">Action</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li>
+                  <a class="dropdown-item" id="adminBalance"
+                    >Something else here</a
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- alert section  -->
+    <div id="txStatus"></div>
+
     <div class="votingSection" id="section">
-      <button type="submit" id="giveRight">Give Me Right</button>
+      <div class="listSection">
+        <div class="form-check mt-3">
+          <input
+            class="form-check-input mt-3"
+            type="radio"
+            name="flexRadioDefault"
+            value="0"
+            id="dhyey"
+          />
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/U%2B217E.svg/1200px-U%2B217E.svg.png"
+            alt="d"
+            class="rounded-circle logo border border-ligh"
+          />
+          <label class="form-check-label ms-3" for="dhyey">Dhyey </label>
+        </div>
+        <div class="form-check mt-3">
+          <input
+            class="form-check-input mt-3"
+            type="radio"
+            name="flexRadioDefault"
+            value="1"
+            id="fenil"
+          />
+          <img
+            src="https://www.funnycoloringpages.com/uploads/kleurplaten/letter-f.jpg"
+            alt="f"
+            class="rounded-circle logo border border-ligh"
+          />
+          <label class="form-check-label ms-3" for="fenil"> Fenil </label>
+        </div>
+        <div class="form-check mt-3">
+          <input
+            class="form-check-input mt-3"
+            type="radio"
+            name="flexRadioDefault"
+            value="2"
+            id="heet"
+          />
+          <img
+            src="https://www.i2symbol.com/images/text-symbols/h-symbol.png"
+            alt="h"
+            class="rounded-circle logo border border-ligh"
+          />
+          <label class="form-check-label ms-3" for="heet"> Heet </label>
+        </div>
+        <div class="form-check mt-3">
+          <input
+            class="form-check-input mt-3"
+            type="radio"
+            name="flexRadioDefault"
+            value="3"
+            id="nota"
+          />
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/NOTA_Option_Logo.svg/1200px-NOTA_Option_Logo.svg.png"
+            alt="nota"
+            class="rounded-circle logo border border-ligh"
+          />
+          <label class="form-check-label ms-3" for="nota"> NOTA </label>
+        </div>
+      </div>
 
-      <br />
-      <input type="number" id="index" />
-      <button type="submit" id="vote">Vote</button>
+      <button
+        type="submit"
+        id="giveRight"
+        class="my-3 me-5 btn btn-outline-success"
+      >
+        Give Me Right
+      </button>
 
-      <button type="submit" id="summary">Summary</button>
+      <!-- <input type="number" id="index" /> -->
+      <button type="submit" id="vote" class="me-5 btn btn-outline-warning">
+        Vote
+      </button>
+
+      <button type="submit" id="summary" class="me-5 btn btn-outline-secondary">
+        Summary
+      </button>
       <div class="summary"></div>
+
+      <!-- or section -->
+      <hr class="hr-text" data-content="OR" />
+
+      <!-- delegate vote -->
+      <div class="input-group mb-3 delegate mt-3">
+        <input type="text" class="form-control" id="delegateId" />
+        <button class="btn btn-outline-primary" type="submit" id="delegate">
+          Delegate
+        </button>
+      </div>
     </div>
 
-    <div class="resultSection"></div>
+    <!-- result Section -->
+    <div class="resultSection" style="display: none">
+      <div class="confetti">
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+      </div>
+      <div class="content"></div>
+    </div>
 
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Summary</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body container">
+            <div class="row mt-2 mb-4 text-center">
+              <div class="col"><b>Candidates</b></div>
+              <div class="col"><b>Votes</b></div>
+            </div>
+            <div class="row mt-3 text-center">
+              <div class="col">
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/U%2B217E.svg/1200px-U%2B217E.svg.png"
+                  alt="d"
+                  class="rounded-circle border border-ligh"
+                  width="30px"
+                  height="30px"
+                />
+                <label class="form-check-label ms-3" for="dhyey">Dhyey </label>
+              </div>
+              <div class="col votes1"></div>
+            </div>
+
+            <div class="row mt-3 text-center">
+              <div class="col">
+                <img
+                  src="https://www.funnycoloringpages.com/uploads/kleurplaten/letter-f.jpg"
+                  alt="f"
+                  class="rounded-circle border border-ligh"
+                  width="30px"
+                  height="30px"
+                />
+                <label class="form-check-label ms-3" for="fenil"> Fenil </label>
+              </div>
+              <div class="col votes2"></div>
+            </div>
+
+            <div class="row mt-3 text-center">
+              <div class="col">
+                <img
+                  src="https://www.i2symbol.com/images/text-symbols/h-symbol.png"
+                  alt="h"
+                  class="rounded-circle border border-ligh"
+                  width="30px"
+                  height="30px"
+                />
+                <label class="form-check-label ms-3" for="heet"> Heet </label>
+              </div>
+              <div class="col votes3"></div>
+            </div>
+
+            <div class="row mt-3 text-center">
+              <div class="col">
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/NOTA_Option_Logo.svg/1200px-NOTA_Option_Logo.svg.png"
+                  alt="nota"
+                  class="rounded-circle border border-ligh"
+                  width="30px"
+                  height="30px"
+                />
+                <label class="form-check-label ms-3" for="nota"> NOTA </label>
+              </div>
+              <div class="col votes4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- script -->
     <script src="./index.js"></script>
+    <script src="	https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

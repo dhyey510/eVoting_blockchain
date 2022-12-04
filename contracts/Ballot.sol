@@ -6,6 +6,8 @@ contract Ballot {
     // be used for variables later.
     // It will represent a single voter.
     string[] proposalsNames;
+    address[] voterName; 
+
     struct Voter {
         uint weight; // weight is accumulated by delegation
         bool voted;  // if true, that person already voted
@@ -52,20 +54,7 @@ contract Ballot {
     // Give `voter` the right to vote on this ballot.
     // May only be called by `chairperson`.
     function giveRightToVote(address voter) external {
-        // If the first argument of `require` evaluates
-        // to `false`, execution terminates and all
-        // changes to the state and to Ether balances
-        // are reverted.
-        // This used to consume all gas in old EVM versions, but
-        // not anymore.
-        // It is often a good idea to use `require` to check if
-        // functions are called correctly.
-        // As a second argument, you can also provide an
-        // explanation about what went wrong.
-        // require(
-        //     msg.sender == chairperson,
-        //     "Only chairperson can give right to vote."
-        // );
+        
         require(
             !voters[voter].voted,
             "The voter already voted."
@@ -132,6 +121,7 @@ contract Ballot {
         // this will throw automatically and revert all
         // changes.
         proposals[proposal].voteCount += sender.weight;
+        voterName.push(msg.sender);
     }
 
     /// @dev Computes the winning proposal taking all
@@ -167,5 +157,17 @@ contract Ballot {
 
     function summaryOfVotes() public view returns (Proposal[] memory){
         return proposals;
+    }
+
+    function resetVoters() external {
+        for(uint p = 0; p < voterName.length; p++){
+            Voter storage voter = voters[voterName[p]];
+            voter.vote = 0;
+            voter.voted = false;
+            voter.weight = 0;
+        }
+        for (uint p = 0; p < proposals.length; p++) {
+            proposals[p].voteCount = 0;
+        }   
     }
 }
