@@ -1,6 +1,5 @@
-const Ballots = artifacts.require("Ballot.sol");
+const migrations = artifacts.require("Migrations");
 
 module.exports = function (deployer) {
-  var namesOfProposal = ["dhyey", "Fenil", "Heet", "NOTA"];
-  deployer.deploy(Ballots, namesOfProposal);
+  deployer.deploy(migrations);
 };

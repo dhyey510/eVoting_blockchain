@@ -20,7 +20,12 @@ body {
 }
 #adminSection {
   width: fit-content;
-  margin: 12% auto;
+  margin: 5% auto;
+}
+
+#nftSection {
+  width: fit-content;
+  margin: 2% auto;
 }
 
 .votingSection,
@@ -223,4 +228,18 @@ hr:after {
   width: fit-content;
   margin: 5% auto;
   font-weight: bold;
+}
+#mint {
+  transform: translateX(240%);
+}
+/* #tokenid,
+#price,
+#listingsection {
+  width: 8%;
+  display: inline;
+} */
+
+#seller {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

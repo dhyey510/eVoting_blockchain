@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@openzeppelin/contracts": "^4.8.0",
     "http-server": "^14.1.1",
     "openzeppelin-solidity": "^4.6.0"
   }
