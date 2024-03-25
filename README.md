@@ -29,10 +29,6 @@ To run the application, follow these steps:
 4. Run `truffle migrate` command.
 5. Run `index.html` file. It will connect the website with MetaMask.
 
-## Screenshots
-
-Include screenshots showcasing the UI and functionality of your application here.
-
 ## Technologies Used
 
 - **Solidity**: Smart contract language for developing blockchain applications.
